@@ -6,7 +6,7 @@ After=network.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/setrawip
+ExecStart=/usr/bin/set7600
 TimeoutSec=300
 
 [Install]
