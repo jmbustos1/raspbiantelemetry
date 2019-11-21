@@ -1,0 +1,11 @@
+#!/bin/bash
+
+/sbin/ifconfig wwan0 down
+echo "Y" > /sys/class/net/wwan0/qmi/raw_ip
+/sbin/ifconfig wwan0 up
+
+timeout 15 qmi-network /dev/cdc-wdm0 stop > /dev/null 2>&1
+timeout 15 qmi-network /dev/cdc-wdm0 start > /dev/null 2>&1
+timeout 30 /sbin/udhcpc -i wwan0 > /dev/null 2>&1
+
+echo "AT+CVAUXV=3050" >> /dev/ttyUSB3
