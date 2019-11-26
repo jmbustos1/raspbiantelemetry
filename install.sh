@@ -18,6 +18,12 @@ systemctl enable set7600
 cp usr/bin/check7600 /usr/bin/check7600
 cat crontab.root | crontab -
 
+# CAN
+cat boot/config.txt >> /boot/config.txt
+cp etc/systemd/system/setMCP2515.service /etc/systemd/system/setMCP2515.service
+cp usr/bin/setMCP2515 /usr/bin/setMCP2515
+systemctl enable setMCP2515
+
 # python
 aptitude install virtualenv
 
