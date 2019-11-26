@@ -41,16 +41,23 @@ def myShadowUpdateCallback(payload, responseStatus, token):
     print("token = " + token)
 #myAWSIoTMQTTClient = None
 # Create, configure, and connect a shadow client.
-time.sleep(10)
-myAWSIoTMQTTClient = AWSIoTMQTTClient(SHADOW_HANDLER)
-myAWSIoTMQTTClient.configureEndpoint(HOST_NAME, 8883)
-myAWSIoTMQTTClient.configureCredentials(ROOT_CA, PRIVATE_KEY, CERT_FILE)
 
-#myAWSIoTMQTTClient.configureOfflinePublishQueueing(-1)
-myAWSIoTMQTTClient.configureDrainingFrequency(2)
-myAWSIoTMQTTClient.configureConnectDisconnectTimeout(10)
-myAWSIoTMQTTClient.configureMQTTOperationTimeout(5)
-myAWSIoTMQTTClient.connect()
+isConnected = False
+while not isConnected:
+    try:
+        myAWSIoTMQTTClient = AWSIoTMQTTClient(SHADOW_HANDLER)
+        myAWSIoTMQTTClient.configureEndpoint(HOST_NAME, 8883)
+        myAWSIoTMQTTClient.configureCredentials(ROOT_CA, PRIVATE_KEY, CERT_FILE)
+
+        #myAWSIoTMQTTClient.configureOfflinePublishQueueing(-1)
+        myAWSIoTMQTTClient.configureDrainingFrequency(2)
+        myAWSIoTMQTTClient.configureConnectDisconnectTimeout(10)
+        myAWSIoTMQTTClient.configureMQTTOperationTimeout(5)
+        myAWSIoTMQTTClient.connect()
+        isConnected = True
+    except Exception:
+        time.sleep(10)
+        isConnected = False
 
 # Create a programmatic representation of the shadow.
 topic = '$aws/rules/CANupdate'
@@ -106,9 +113,14 @@ while True:
         x_2 = json.dumps(x_2)
         
         To_send2 = '{"state":"okay"}'
-        
-        myAWSIoTMQTTClient.publish(topic, x_2, 1)
-            
+        isPublished = False
+        while not isPublished:
+            try:
+                myAWSIoTMQTTClient.publish(topic, x_2, 1)
+                isPublished = True
+            except Exception:
+                time.sleep(2)
+                isPublished = False
         print(str(x_2) + ' ' + 'sended')
         shutil.move(path + str(all_files[0]), to_path)
         print('ok')
