@@ -1,7 +1,5 @@
-from tkinter import *
 import datetime
 import time
-import tkinter as tk
 import can
 import time
 import os
@@ -69,10 +67,6 @@ print('Ready')
 ######Interfaz grafica
 f.write(title + "\n")
 f.close()
-root = tk.Tk()
-def exitProgram():
-    print("Exit button pressed")
-    root.quit()
 
 async def busRecv():
         loop = asyncio.get_event_loop()
@@ -178,9 +172,6 @@ async def printData():
                 f.close()
 
                 put = str(now) + ' ' + TO_SEND
-                label9=Label(root,text=put)
-                label9.grid(row=0,column=0,pady=25)
-                root.update()
                 #print(Data_collected)
                 #print(GPS_data)
                 print(TO_SEND)
