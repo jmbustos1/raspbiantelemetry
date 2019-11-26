@@ -6,7 +6,7 @@ ACTIVATE_PATH="$(dirname ${WORKING_DIR})/env3/bin/activate"
 cd ${WORKING_DIR}
 source ${ACTIVATE_PATH}
 
-git pull 2>&1 > pull.log
+git pull > pull.log 2>&1
 
 if [ $(cat pull.log|grep "Already up-to-date."|wc -l) -ne 1 ] &&
    [ $(cat pull.log|grep "Ya está actualizado."|wc -l) -ne 1 ] &&
