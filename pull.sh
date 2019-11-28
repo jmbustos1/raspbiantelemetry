@@ -16,4 +16,6 @@ then
   sudo cp cancollecter.conf /etc/supervisor/conf.d/cancollecter.conf
   sudo cp push2aws.conf /etc/supervisor/conf.d/push2aws.conf
   sudo service supervisor restart
+  sudo cp can0 /etc/network/interfaces.d/can0
+  sudo service networking restart
 fi
