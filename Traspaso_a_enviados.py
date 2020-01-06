@@ -1,3 +1,4 @@
+#linea de prueba
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTShadowClient
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 import AWSIoTPythonSDK
