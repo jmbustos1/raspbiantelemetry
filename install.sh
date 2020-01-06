@@ -22,6 +22,7 @@ cat crontab.root | crontab -
 
 # CAN
 cat boot/config.txt >> /boot/config.txt
+cp can0 /etc/network/interfaces.d/can0
 
 # python
 aptitude install virtualenv
