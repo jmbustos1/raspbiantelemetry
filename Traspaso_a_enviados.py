@@ -112,7 +112,7 @@ while True:
                 "Longitud": str(0)
                 }
         x_2 = json.dumps(x_2)
-        
+
         To_send2 = '{"state":"okay"}'
         isPublished = False
         while not isPublished:
@@ -123,7 +123,8 @@ while True:
                 time.sleep(2)
                 isPublished = False
         print(str(x_2) + ' ' + 'sended')
-        shutil.move(path + str(all_files[0]), to_path)
+        shutil.copy(path + str(all_files[0]), to_path)
+        os.remove(path + str(all_files[0]))
         print('ok')
         # Wait for this test value to be added.
     time.sleep(4)

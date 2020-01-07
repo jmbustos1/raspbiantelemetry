@@ -43,3 +43,5 @@ do
   timeout 15 qmi-network ${devwwan0} start
   timeout 20 /sbin/udhcpc -i wwan0
 done
+
+timeout 20 /sbin/udhcpc -i wwan0
