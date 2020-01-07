@@ -23,7 +23,9 @@ then
 fi
 
 while [ $(ps -efww| grep $0| wc -l) -le 4 ] &&
-      [ $(/sbin/ifconfig wwan0|grep -v inet6|grep inet|grep -v " 169"|wc -l) -eq 0 ]
+      [ $(/sbin/ifconfig wwan0|grep -v inet6|grep inet|grep -v " 169"|wc -l) -eq 0 ] &&
+      [ $(ls /sys/class/net/wwan0/qmi/raw_ip 2> /dev/null| wc -l) -gt 0 ] &&
+      [ ! "$(cat /sys/class/net/wwan0/qmi/raw_ip)" = "N" ]
 do
   timeout 15 qmi-network ${devwwan0} stop
   timeout 15 qmi-network ${devwwan0} stop
@@ -32,7 +34,9 @@ do
 done
 
 while [ $(ps -efww| grep $0| wc -l) -le 4 ] &&
-      [ "$(qmi-network ${devwwan0} status|grep Status|awk '{print $2}')" = "disconnected" ]
+      [ "$(qmi-network ${devwwan0} status|grep Status|awk '{print $2}')" = "disconnected" ] &&
+      [ $(ls /sys/class/net/wwan0/qmi/raw_ip 2> /dev/null| wc -l) -gt 0 ] &&
+      [ ! "$(cat /sys/class/net/wwan0/qmi/raw_ip)" = "N" ]
 do
   timeout 15 qmi-network ${devwwan0} stop
   timeout 15 qmi-network ${devwwan0} stop
