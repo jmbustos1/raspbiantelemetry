@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # sim7600
-aptitude install libqmi-utils udhcpc gpsd
+aptitude install libqmi-utils udhcpc gpsd supervisor
 
 while [ $(ls /dev/cdc-wdm* 2> /dev/null| wc -l) = 0 ]
 do
@@ -23,6 +23,8 @@ cat crontab.root | crontab -
 # CAN
 cat boot/config.txt >> /boot/config.txt
 cp can0 /etc/network/interfaces.d/can0
+mkdir -p No_Enviados
+mkdir -p Enviados
 
 # python
 aptitude install virtualenv
@@ -31,6 +33,6 @@ su - pi -c '
 virtualenv -p python3 env3
 source env3/bin/activate
 pip3 install --upgrade pip
-pip3 install -r requirements.txt
+pip3 install -r raspbiantelemetry/requirements.txt
 deactivate
 '
