@@ -19,6 +19,7 @@ then
   /sbin/ifconfig wwan0 down
   echo "Y" > /sys/class/net/wwan0/qmi/raw_ip
   echo "AT+CVAUXV=3050" >> /dev/ttyUSB3
+  echo "AT+CGPS=1" > /dev/ttyUSB3
   /sbin/ifconfig wwan0 up
 fi
 
@@ -44,4 +45,7 @@ do
   timeout 20 /sbin/udhcpc -i wwan0
 done
 
-timeout 20 /sbin/udhcpc -i wwan0
+if [ $(ps -efww| grep udhcpc| wc -l) -le 1 ]
+then
+  timeout 20 /sbin/udhcpc -i wwan0
+fi
