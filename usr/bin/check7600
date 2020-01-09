@@ -19,7 +19,10 @@ then
   /sbin/ifconfig wwan0 down
   echo "Y" > /sys/class/net/wwan0/qmi/raw_ip
   echo "AT+CVAUXV=3050" >> /dev/ttyUSB3
+  echo "AT+CVAUXS=1" > /dev/ttyUSB3
   echo "AT+CGPS=1" > /dev/ttyUSB3
+  echo "AT+CGPSHOR=100" > /dev/ttyUSB3
+  echo "AT+CGPSAUTO=1" > /dev/ttyUSB3
   /sbin/ifconfig wwan0 up
 fi
 
