@@ -6,6 +6,13 @@ ACTIVATE_PATH="$(dirname ${WORKING_DIR})/env3/bin/activate"
 cd ${WORKING_DIR}
 source ${ACTIVATE_PATH}
 
+if [ ! -f ${WORKING_DIR}/reboot.log ]
+then
+  touch ${WORKING_DIR}/reboot.log
+  echo "reboteado" > ${WORKING_DIR}/reboot.log
+  sudo reboot
+fi
+
 git remote update
 if [ $(git status -uno| grep 'origin/master'| grep -v 'up to date'| wc -l) -ge 1 ]
 then
