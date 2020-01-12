@@ -8,7 +8,7 @@ import random
 import glob
 from gps3 import gps3
 
-test = '/home/pi/Desktop/AWS/Enviados/*'
+test = '/home/pi/raspbiantelemetry/Enviados/*'
 r = glob.glob(test)
 for i in r:
         os.remove(i)
@@ -24,8 +24,8 @@ except OSError:
 	exit()
 
 ####Directorios####
-open_path = '/home/pi/Desktop/AWS/boot.txt'
-path = '/home/pi/Desktop/AWS/No_Enviados/'
+open_path = '/home/pi/raspbiantelemetry/boot.txt'
+path = '/home/pi/raspbiantelemetry/No_Enviados/'
 
 SOC_id = '10ffecf4'
 RPM_id = '18ff459a'
@@ -36,9 +36,6 @@ final_v_bat = 0
 
 Data_collected = '0 0 0 0'
 GPS_data  = '0 0 0'
-
-f=open(open_path,'a')
-title = 'Days of the Week'
 
 ####Definir CAN
 try:
@@ -65,9 +62,6 @@ except OSError:
 print('Ready')
 
 ######Interfaz grafica
-f.write(title + "\n")
-f.close()
-
 async def busRecv():
         loop = asyncio.get_event_loop()
         return await loop.run_in_executor(None, bus.recv)

@@ -17,17 +17,17 @@ HOST_NAME = "a3j11b88qfh3w4-ats.iot.us-east-1.amazonaws.com"
 
 # The relative path to the correct root CA file for AWS IoT, 
 # that you have already saved onto this device.
-ROOT_CA = "/home/pi/Desktop/AWS/AmazonRootCA1.pem.txt"
+ROOT_CA = "/home/pi/raspbiantelemetry/AmazonRootCA1.pem.txt"
 
 # The relative path to your private key file that 
 # AWS IoT generated for this device, that you 
 # have already saved onto this device.
-PRIVATE_KEY = "/home/pi/Desktop/AWS/56f4000c82-private.pem.key"
+PRIVATE_KEY = "/home/pi/raspbiantelemetry/56f4000c82-private.pem.key"
 
 # The relative path to your certificate file that 
 # AWS IoT generated for this device, that you 
 # have already saved onto this device.
-CERT_FILE = "/home/pi/Desktop/AWS/56f4000c82-certificate.pem.crt"
+CERT_FILE = "/home/pi/raspbiantelemetry/56f4000c82-certificate.pem.crt"
 
 # A programmatic shadow handler name prefix.
 SHADOW_HANDLER = "rpi1"
@@ -63,9 +63,9 @@ while not isConnected:
 # Create a programmatic representation of the shadow.
 topic = '$aws/rules/CANupdate'
 
-open_path = '/home/pi/Desktop/AWS/boot.txt'
-path = '/home/pi/Desktop/AWS/No_Enviados/'
-to_path = '/home/pi/Desktop/AWS/Enviados'
+open_path = '/home/pi/raspbiantelemetry/boot.txt'
+path = '/home/pi/raspbiantelemetry/No_Enviados/'
+to_path = '/home/pi/raspbiantelemetry/Enviados'
 all_files = os.listdir(path)
 
 f=open(open_path,'a')
@@ -112,7 +112,7 @@ while True:
                 "Longitud": str(0)
                 }
         x_2 = json.dumps(x_2)
-        
+
         To_send2 = '{"state":"okay"}'
         isPublished = False
         while not isPublished:
@@ -123,7 +123,8 @@ while True:
                 time.sleep(2)
                 isPublished = False
         print(str(x_2) + ' ' + 'sended')
-        shutil.move(path + str(all_files[0]), to_path)
+        shutil.copy(path + str(all_files[0]), to_path)
+        os.remove(path + str(all_files[0]))
         print('ok')
         # Wait for this test value to be added.
     time.sleep(4)

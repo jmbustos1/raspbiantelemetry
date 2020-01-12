@@ -1,14 +1,54 @@
 #!/bin/bash
 
-while [ $(/sbin/ifconfig wwan0|grep inet|wc -l) -eq 0 ] && [ $(ps -A|grep rewwan0|wc -l) -le 2 ]
+while [ $(ls /dev/cdc-wdm* 2> /dev/null| wc -l) = 0 ]
 do
-  timeout 15 qmi-network /dev/cdc-wdm0 stop
-  timeout 15 qmi-network /dev/cdc-wdm0 start
-  timeout 30 /sbin/udhcpc -i wwan0
+  echo "waiting for /dev/cdc-wdm* ..."
+  sleep 1
 done
 
-while [ "$(qmi-network /dev/cdc-wdm0 status|grep Status|awk '{print $2}')" = "disconnected" ]
+devwwan0="$(ls /dev/cdc-wdm*| tail -n 1| awk '{print $1}')"
+
+while [ ! -f /sys/class/net/wwan0/qmi/raw_ip ]
 do
-  timeout 15 qmi-network /dev/cdc-wdm0 stop
-  timeout 15 qmi-network /dev/cdc-wdm0 start
+  echo "waiting for /sys/class/net/wwan0/qmi/raw_ip ..."
+  sleep 1
 done
+
+if [ "$(cat /sys/class/net/wwan0/qmi/raw_ip)" = "N" ]
+then
+  /sbin/ifconfig wwan0 down
+  echo "Y" > /sys/class/net/wwan0/qmi/raw_ip
+  echo "AT+CVAUXV=3050" >> /dev/ttyUSB3
+  echo "AT+CVAUXS=1" > /dev/ttyUSB3
+  echo "AT+CGPS=1" > /dev/ttyUSB3
+  echo "AT+CGPSHOR=100" > /dev/ttyUSB3
+  echo "AT+CGPSAUTO=1" > /dev/ttyUSB3
+  /sbin/ifconfig wwan0 up
+fi
+
+while [ $(ps -efww| grep $0| wc -l) -le 4 ] &&
+      [ $(/sbin/ifconfig wwan0|grep -v inet6|grep inet|grep -v " 169"|wc -l) -eq 0 ] &&
+      [ $(ls /sys/class/net/wwan0/qmi/raw_ip 2> /dev/null| wc -l) -gt 0 ] &&
+      [ ! "$(cat /sys/class/net/wwan0/qmi/raw_ip)" = "N" ]
+do
+  timeout 15 qmi-network ${devwwan0} stop
+  timeout 15 qmi-network ${devwwan0} stop
+  timeout 15 qmi-network ${devwwan0} start
+  timeout 20 /sbin/udhcpc -i wwan0
+done
+
+while [ $(ps -efww| grep $0| wc -l) -le 4 ] &&
+      [ "$(qmi-network ${devwwan0} status|grep Status|awk '{print $2}')" = "disconnected" ] &&
+      [ $(ls /sys/class/net/wwan0/qmi/raw_ip 2> /dev/null| wc -l) -gt 0 ] &&
+      [ ! "$(cat /sys/class/net/wwan0/qmi/raw_ip)" = "N" ]
+do
+  timeout 15 qmi-network ${devwwan0} stop
+  timeout 15 qmi-network ${devwwan0} stop
+  timeout 15 qmi-network ${devwwan0} start
+  timeout 20 /sbin/udhcpc -i wwan0
+done
+
+if [ $(ps -efww| grep udhcpc| wc -l) -le 1 ]
+then
+  timeout 20 /sbin/udhcpc -i wwan0
+fi
