@@ -7,7 +7,7 @@ import numpy as np
 import json
 import os
 import shutil
-
+###reinicio.py
 # A random programmatic shadow client ID.
 SHADOW_CLIENT = "myShadowClient"
 
