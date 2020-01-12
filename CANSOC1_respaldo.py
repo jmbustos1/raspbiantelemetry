@@ -12,7 +12,7 @@ test = '/home/pi/Desktop/AWS/Enviados/*'
 r = glob.glob(test)
 for i in r:
         os.remove(i)
-
+###COMMIT DE REINICIO
 ####iniciar CANbus #####
 try:
         print('\n\rCAN Rx test')
