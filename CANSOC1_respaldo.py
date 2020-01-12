@@ -12,7 +12,7 @@ test = '/home/pi/raspbiantelemetry/Enviados/*'
 r = glob.glob(test)
 for i in r:
         os.remove(i)
-###COMMIT DE REINICIO
+###restart commit
 ####iniciar CANbus #####
 try:
         print('\n\rCAN Rx test')
