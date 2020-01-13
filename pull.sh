@@ -6,10 +6,11 @@ ACTIVATE_PATH="$(dirname ${WORKING_DIR})/env3/bin/activate"
 cd ${WORKING_DIR}
 source ${ACTIVATE_PATH}
 
-if [ ! -f ${WORKING_DIR}/reboot.log ]
+if [ ! -f ${WORKING_DIR}/reboot01.log ]
 then
-  touch ${WORKING_DIR}/reboot.log
-  echo "reboteado" > ${WORKING_DIR}/reboot.log
+  touch ${WORKING_DIR}/reboot01.log
+  echo "reboteado" > ${WORKING_DIR}/reboot01.log
+  rm ${WORKING_DIR}/reboot.log
   sudo reboot
 fi
 
