@@ -36,7 +36,7 @@ final_v_bat = 0
 
 Data_collected = '0 0 0 0'
 GPS_data  = '0 0 0'
-
+aa = 0
 ####Definir CAN
 try:
 	bus = can.interface.Bus(channel='can0', bustype='socketcan_native')
@@ -169,6 +169,9 @@ async def printData():
                 #print(Data_collected)
                 #print(GPS_data)
                 print(TO_SEND)
+                aa = aa + 1
+                if aa > 50
+                        os.system("sudo reboot")
                 await asyncio.sleep(10)
 
 
