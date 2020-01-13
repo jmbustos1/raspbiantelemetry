@@ -11,21 +11,21 @@ import shutil
 # A random programmatic shadow client ID.
 SHADOW_CLIENT = "myShadowClient"
 
-# The unique hostname that AWS IoT generated for 
+# The unique hostname that AWS IoT generated for
 # this device.
 HOST_NAME = "a3j11b88qfh3w4-ats.iot.us-east-1.amazonaws.com"
 
-# The relative path to the correct root CA file for AWS IoT, 
+# The relative path to the correct root CA file for AWS IoT,
 # that you have already saved onto this device.
 ROOT_CA = "/home/pi/raspbiantelemetry/AmazonRootCA1.pem.txt"
 
-# The relative path to your private key file that 
-# AWS IoT generated for this device, that you 
+# The relative path to your private key file that
+# AWS IoT generated for this device, that you
 # have already saved onto this device.
 PRIVATE_KEY = "/home/pi/raspbiantelemetry/56f4000c82-private.pem.key"
 
-# The relative path to your certificate file that 
-# AWS IoT generated for this device, that you 
+# The relative path to your certificate file that
+# AWS IoT generated for this device, that you
 # have already saved onto this device.
 CERT_FILE = "/home/pi/raspbiantelemetry/56f4000c82-certificate.pem.crt"
 
@@ -75,7 +75,7 @@ f.close()
 
 while True:
     all_files = os.listdir(path)
-    
+
     all_files = os.chdir(path)
     all_files = sorted(filter(os.path.isfile, os.listdir('.')), key=os.path.getmtime)
     if len(all_files)>0:
@@ -122,7 +122,7 @@ while True:
             except Exception:
                 time.sleep(2)
                 isPublished = False
-        print(str(x_2) + ' ' + 'sended')
+        print(str(x_2) + ' ' + 'sent')
         shutil.copy(path + str(all_files[0]), to_path)
         os.remove(path + str(all_files[0]))
         print('ok')
