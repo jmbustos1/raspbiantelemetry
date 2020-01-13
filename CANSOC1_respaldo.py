@@ -169,9 +169,7 @@ async def printData():
                 #print(Data_collected)
                 #print(GPS_data)
                 print(TO_SEND)
-                aa = aa + 1
-                if aa > 50
-                        os.system("sudo reboot")
+
                 await asyncio.sleep(10)
 
 
