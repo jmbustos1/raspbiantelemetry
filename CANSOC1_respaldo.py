@@ -170,7 +170,7 @@ async def printData():
                 #print(GPS_data)
                 print(TO_SEND)
 
-                await asyncio.sleep(10)
+                await asyncio.sleep(40)
 
 
 async def main():
