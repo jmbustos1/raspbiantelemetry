@@ -127,5 +127,5 @@ while True:
         os.remove(path + str(all_files[0]))
         print('ok')
         # Wait for this test value to be added.
-    time.sleep(10)
+    time.sleep(60)
 
