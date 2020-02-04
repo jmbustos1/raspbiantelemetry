@@ -2,6 +2,7 @@
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTShadowClient
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 import AWSIoTPythonSDK
+import AWSparams
 import time
 import numpy as np
 import json
@@ -9,28 +10,28 @@ import os
 import shutil
 ###reinicio.py
 # A random programmatic shadow client ID.
-SHADOW_CLIENT = "myShadowClient"
+SHADOW_CLIENT = AWSparams.Credentials["SHADOW_CLIENT"]
 
 # The unique hostname that AWS IoT generated for
 # this device.
-HOST_NAME = "a3j11b88qfh3w4-ats.iot.us-east-1.amazonaws.com"
+HOST_NAME = AWSparams.Credentials["HOST_NAME"]
 
 # The relative path to the correct root CA file for AWS IoT,
 # that you have already saved onto this device.
-ROOT_CA = "/home/pi/raspbiantelemetry/AmazonRootCA1.pem.txt"
+ROOT_CA = AWSparams.Credentials["ROOT_CA"]
 
 # The relative path to your private key file that
 # AWS IoT generated for this device, that you
 # have already saved onto this device.
-PRIVATE_KEY = "/home/pi/raspbiantelemetry/56f4000c82-private.pem.key"
+PRIVATE_KEY = AWSparams.Credentials["PRIVATE_KEY"]
 
 # The relative path to your certificate file that
 # AWS IoT generated for this device, that you
 # have already saved onto this device.
-CERT_FILE = "/home/pi/raspbiantelemetry/56f4000c82-certificate.pem.crt"
+CERT_FILE = AWSparams.Credentials["CERT_FILE"]
 
 # A programmatic shadow handler name prefix.
-SHADOW_HANDLER = "rpi1"
+SHADOW_HANDLER = AWSparams.Credentials["SHADOW_HANDLER"]
 
 # Automatically called whenever the shadow is updated.
 def myShadowUpdateCallback(payload, responseStatus, token):
@@ -51,27 +52,27 @@ while not isConnected:
         myAWSIoTMQTTClient.configureCredentials(ROOT_CA, PRIVATE_KEY, CERT_FILE)
 
         #myAWSIoTMQTTClient.configureOfflinePublishQueueing(-1)
-        myAWSIoTMQTTClient.configureDrainingFrequency(2)
-        myAWSIoTMQTTClient.configureConnectDisconnectTimeout(10)
-        myAWSIoTMQTTClient.configureMQTTOperationTimeout(5)
+        myAWSIoTMQTTClient.configureDrainingFrequency(AWSparams.MQTTClient["DrainingFrequency"])
+        myAWSIoTMQTTClient.configureConnectDisconnectTimeout(AWSparams.MQTTClient["ConnectDisconnectTimeout"])
+        myAWSIoTMQTTClient.configureMQTTOperationTimeout(AWSparams.MQTTClient["MQTTOperationTimeout"])
         myAWSIoTMQTTClient.connect()
         isConnected = True
     except Exception:
-        time.sleep(10)
+        time.sleep(AWSparams.MQTTClient["MQTTConnectExceptionTime"])
         isConnected = False
 
 # Create a programmatic representation of the shadow.
-topic = '$aws/rules/CANupdate'
+topic = AWSparams.Paths["topic"]
 
-open_path = '/home/pi/raspbiantelemetry/boot.txt'
-path = '/home/pi/raspbiantelemetry/No_Enviados/'
-to_path = '/home/pi/raspbiantelemetry/Enviados'
+#open_path = AWSparams.Paths["topic"]
+path = AWSparams.Paths["path"]
+to_path = AWSparams.Paths["to_path"]
 all_files = os.listdir(path)
 
-f=open(open_path,'a')
-title = 'Days of the Week'
-f.write(title + "\n")
-f.close()
+#f=open(open_path,'a')
+#title = 'Days of the Week'
+#f.write(title + "\n")
+#f.close()
 
 while True:
     all_files = os.listdir(path)
@@ -117,15 +118,15 @@ while True:
         isPublished = False
         while not isPublished:
             try:
-                myAWSIoTMQTTClient.publish(topic, x_2, 1)
+                myAWSIoTMQTTClient.publish(topic, x_2, AWSparams.MQTTClient["MQTTPublishQuality"])
                 isPublished = True
             except Exception:
-                time.sleep(2)
+                time.sleep(AWSparams.MQTTClient["MQTTPublishExceptionTime"])
                 isPublished = False
         print(str(x_2) + ' ' + 'sent')
         shutil.copy(path + str(all_files[0]), to_path)
         os.remove(path + str(all_files[0]))
         print('ok')
         # Wait for this test value to be added.
-    time.sleep(5)
+    time.sleep(AWSparams.MQTTClient["MQTTPublishTime"])
 
