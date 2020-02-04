@@ -80,7 +80,7 @@ async def GPS_f():
                         #print('Longitude = ', data_stream.TPV['lon'])
                         GPS_data  = str(data_stream.TPV['alt']) + ' ' + str(data_stream.TPV['lat']) + ' ' + str(data_stream.TPV['lon']) 
                         print(GPS_data)
-                await asyncio.sleep(1)
+                await asyncio.sleep(CANparams.Frequencys["GPS"])
                         
 async def collector():
         global SOC_id
@@ -147,7 +147,7 @@ async def collector():
                         final_v_bat = (v_bat & 8191)*0.1
                         
                 Data_collected = str(final_SOC) + ' ' + str(final_RPM) + ' ' + str(final_i_bat) + ' ' + str(final_v_bat)
-                await asyncio.sleep(0)
+                await asyncio.sleep(CANparams.Frequencys["CAN"])
 
         except KeyboardInterrupt:
             os.system("sudo /sbin/ip link set can0 down")
@@ -172,7 +172,7 @@ async def printData():
                 #print(GPS_data)
                 print(TO_SEND)
 
-                await asyncio.sleep(120)
+                await asyncio.sleep(CANparams.Frequencys["SEND"])
 
 
 async def main():
