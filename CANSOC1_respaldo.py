@@ -6,29 +6,31 @@ import os
 import asyncio
 import random
 import glob
+import CANparams
 from gps3 import gps3
 
-test = '/home/pi/raspbiantelemetry/Enviados/*'
+test = CANparams.Paths["test"]
 r = glob.glob(test)
 for i in r:
         os.remove(i)
 ###restart commit
 ####iniciar CANbus #####
-try:
-        print('\n\rCAN Rx test')
-        print('Bring up CAN0....')
-        os.system("sudo /sbin/ip link set can0 up type can bitrate 500000")
-        time.sleep(0.1)
-except OSError:
-	print('Cannot find PiCAN board.')
-	exit()
+
+#try:
+        #print('\n\rCAN Rx test')
+       # print('Bring up CAN0....')
+        #os.system("sudo /sbin/ip link set can0 up type can bitrate 500000")
+        #time.sleep(0.1)
+#except OSError:
+	#print('Cannot find PiCAN board.')
+	#exit()
 
 ####Directorios####
-open_path = '/home/pi/raspbiantelemetry/boot.txt'
-path = '/home/pi/raspbiantelemetry/No_Enviados/'
+#open_path = '/home/pi/raspbiantelemetry/boot.txt'
+path = CANparams.Paths["path"]
 
-SOC_id = '10ffecf4'
-RPM_id = '18ff459a'
+SOC_id = CANparams.IDs["SOC_id"]
+RPM_id = CANparams.IDs["RPM_id"]
 final_SOC = 0
 final_RPM = 0
 final_i_bat = 0
