@@ -7,6 +7,7 @@ import asyncio
 import random
 import glob
 import CANparams
+import CANfunctions as CAN
 from gps3 import gps3
 
 test = CANparams.Paths["test"]
