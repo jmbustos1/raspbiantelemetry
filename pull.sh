@@ -28,7 +28,7 @@ then
 
     sudo cp ${WORKING_DIR}/etc/qmi-network.conf /etc/qmi-network.conf
     sudo cp ${WORKING_DIR}/usr/bin/check7600 /usr/bin/check7600
-    sudo cat ${WORKING_DIR}/crontab.root| crontab -
+    sudo cat ${WORKING_DIR}/crontab.root| sudo su -c "crontab -"
 
     sudo cp ${WORKING_DIR}/etc/network/interfaces.d/can0 /etc/network/interfaces.d/can0
     sudo service networking restart
