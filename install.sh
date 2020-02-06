@@ -24,6 +24,7 @@ qmicli -p -d ${devwwan0} --wds-delete-profile="3gpp2,1"
 qmicli -p -d ${devwwan0} --wds-set-autoconnect-settings=disabled
 
 cp ${WORKING_DIR}/etc/qmi-network.conf /etc/qmi-network.conf
+cp ${WORKING_DIR}/etc/wpa_supplicant/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
 cp ${WORKING_DIR}/usr/bin/check7600 /usr/bin/check7600
 cat ${WORKING_DIR}/crontab.root| crontab -
 
