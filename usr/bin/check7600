@@ -25,10 +25,15 @@ then
   echo "AT+CGPS=1" > /dev/ttyUSB3
   echo "AT+CGPSHOR=100" > /dev/ttyUSB3
   echo "AT+CGPSAUTO=1" > /dev/ttyUSB3
+  echo "AT+CRESET" > /dev/ttyUSB3 && cat /dev/ttyUSB3 > /dev/null 2>&1
+  while [ ! $(/sbin/ifconfig -a| grep wwan0| wc -l) -gt 0 ]
+  do
+    echo "waiting for wwan0 ..."
+  done
   /sbin/ifconfig wwan0 up
 fi
 
-while [ $(ps -efww| grep $0| wc -l) -le 4 ] &&
+while [ $(ps -efww| grep $(basename $0)| wc -l) -le 3 ] &&
       [ $(/sbin/ifconfig wwan0|grep -v inet6|grep inet|grep -v " 169"|wc -l) -eq 0 ] &&
       [ $(ls /sys/class/net/wwan0/qmi/raw_ip 2> /dev/null| wc -l) -gt 0 ] &&
       [ ! "$(cat /sys/class/net/wwan0/qmi/raw_ip)" = "N" ]
@@ -39,7 +44,7 @@ do
   timeout 20 /sbin/udhcpc -i wwan0
 done
 
-while [ $(ps -efww| grep $0| wc -l) -le 4 ] &&
+while [ $(ps -efww| grep $(basename $0)| wc -l) -le 3 ] &&
       [ "$(qmi-network ${devwwan0} status|grep Status|awk '{print $2}')" = "disconnected" ] &&
       [ $(ls /sys/class/net/wwan0/qmi/raw_ip 2> /dev/null| wc -l) -gt 0 ] &&
       [ ! "$(cat /sys/class/net/wwan0/qmi/raw_ip)" = "N" ]

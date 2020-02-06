@@ -2,8 +2,12 @@
 
 WORKING_DIR="$(dirname $(readlink -f ${0}))"
 
+# GPIO
+echo "14" >  /sys/class/gpio/export
+echo "out" > /sys/class/gpio/gpio14/direction
+
 # sim7600
-aptitude install libqmi-utils udhcpc gpsd
+aptitude install libqmi-utils udhcpc gpsd gpiod
 
 while [ $(ls /dev/cdc-wdm* 2> /dev/null| wc -l) = 0 ]
 do
