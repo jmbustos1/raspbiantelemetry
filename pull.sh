@@ -24,6 +24,7 @@ then
      [ $(cat pull.log|grep "Ya está actualizado."|wc -l) -ne 1 ] &&
      [ $(cat pull.log|grep "Name or service not known"|wc -l) -ne 1 ]
   then
+    echo "appy changes..."
     cat ${WORKING_DIR}/crontab.user| crontab -
 
     sudo cp ${WORKING_DIR}/etc/qmi-network.conf /etc/qmi-network.conf
