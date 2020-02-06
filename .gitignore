@@ -2,4 +2,6 @@ Enviados
 No_Enviados
 reboot*.log
 boot.txt
+__pycache__
+pull.log
 .vscode
