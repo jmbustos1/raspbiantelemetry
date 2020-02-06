@@ -7,7 +7,7 @@ echo "14" >  /sys/class/gpio/export
 echo "out" > /sys/class/gpio/gpio14/direction
 
 # sim7600
-aptitude install libqmi-utils udhcpc gpsd gpiod
+aptitude install libqmi-utils udhcpc gpsd
 
 while [ $(ls /dev/cdc-wdm* 2> /dev/null| wc -l) = 0 ]
 do
