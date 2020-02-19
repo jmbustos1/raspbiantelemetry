@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [ $(/sbin/ifconfig wlan0|grep "inet "|grep -v 169| wc -l) -gt 0 ]
+then
+  timeout 20 /sbin/udhcpc -i wlan0
+  exit 0
+fi
+
 echo "0" > /sys/class/gpio/gpio14/value
 
 while [ $(ls /dev/cdc-wdm* 2> /dev/null| wc -l) = 0 ]
