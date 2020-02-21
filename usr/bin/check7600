@@ -1,7 +1,10 @@
 #!/bin/bash
 
+echo "init check7600..."
+
 if [ $(/sbin/ifconfig wlan0| grep 'inet '| grep -v 169| wc -l) -gt 0 ]
 then
+  echo "wifi..."
   if [ $(ps -efww| grep udhcpc| grep wlan0| grep -v 'grep'| wc -l) -le 0 ]
   then
     timeout 20 /sbin/udhcpc -i wlan0
@@ -28,23 +31,45 @@ done
 raw_ip="$(find /sys -name raw_ip 2> /dev/null| tail -n 1)"
 netwan="$(echo ${raw_ip} | sed 's,.*net/,,g'| sed 's,/qmi.*$,,g')"
 
-if [ "$(cat ${raw_ip})" = "N" ]
+if [ ! "$(cat ${raw_ip})" = "Y" ]
 then
-  /sbin/ifconfig ${netwan} down
-  echo "AT+CRESET" > /dev/ttyUSB3 && timeout 30 cat /dev/ttyUSB3 > /dev/null 2>&1
-  while [ ! $(/sbin/ifconfig -a| grep ${netwan}| wc -l) -gt 0 ]
+  echo "raw_ip is not Y: ${netwan}"
+  echo "AT+CRESET" > /dev/ttyUSB3 && timeout 60 cat /dev/ttyUSB3 > /dev/null 2>&1
+  while [ $(/sbin/ifconfig -a| grep ${netwan}| wc -l) -le 0 ]
   do
     echo "waiting for ${netwan} ..."
     sleep 1
   done
+
+  while [ $(find /sys -name 'raw_ip' 2> /dev/null| wc -l) -le 0 ]
+  do
+    echo "waiting for raw_ip ..."
+    sleep 1
+  done
+
+  raw_ip="$(find /sys -name raw_ip 2> /dev/null| tail -n 1)"
+  netwan="$(echo ${raw_ip} | sed 's,.*net/,,g'| sed 's,/qmi.*$,,g')"
+
+  /sbin/ifconfig ${netwan} down
   echo "Y" > ${raw_ip}
+  echo "value: $(cat ${raw_ip})"
   echo "AT+CVAUXV=3050" >> /dev/ttyUSB3
   echo "AT+CVAUXS=1" > /dev/ttyUSB3
   echo "AT+CGPS=1" > /dev/ttyUSB3
   echo "AT+CGPSHOR=100" > /dev/ttyUSB3
   echo "AT+CGPSAUTO=1" > /dev/ttyUSB3
   /sbin/ifconfig ${netwan} up
+
+  timeout 15 qmi-network ${dev_cdc_wdm} stop
+  timeout 15 qmi-network ${dev_cdc_wdm} stop
+  timeout 15 qmi-network ${dev_cdc_wdm} start
+  timeout 20 /sbin/udhcpc -i ${netwan}
+
+  exit 0
 fi
+
+raw_ip="$(find /sys -name raw_ip 2> /dev/null| tail -n 1)"
+netwan="$(echo ${raw_ip} | sed 's,.*net/,,g'| sed 's,/qmi.*$,,g')"
 
 while [ $(ps -efww| grep $(basename $0)| grep -v ${$}| grep -v 'grep'| wc -l) -eq 0 ] &&
       [ $(/sbin/ifconfig ${netwan}| grep 'inet '| grep -v ' 169'| wc -l) -eq 0 ] &&
