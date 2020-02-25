@@ -6,6 +6,8 @@ WORKING_DIR="$(dirname $(readlink -f ${0}))"
 echo "14" >  /sys/class/gpio/export
 echo "out" > /sys/class/gpio/gpio14/direction
 
+apt install -y aptitude
+
 # sim7600
 aptitude install libqmi-utils udhcpc gpsd
 
