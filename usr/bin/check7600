@@ -61,30 +61,48 @@ then
   /sbin/ifconfig ${netwan} up
 
   timeout 15 qmi-network ${dev_cdc_wdm} stop
-  timeout 15 qmi-network ${dev_cdc_wdm} start
-  timeout 20 /sbin/udhcpc -i ${netwan}
 
+  qmicli -p -d ${dev_cdc_wdm} \
+    --device-open-net='net-raw-ip|net-no-qos-header' \
+    --wds-start-network="apn='send.ee',username='37259667179',ip-type=4" \
+    --client-no-release-cid
+
+  timeout 20 /sbin/udhcpc -i ${netwan}
   exit 0
+else
+  echo "pass 1"
 fi
 
 if [ $(ps -efww| grep $(basename $0)| grep -v ${$}| grep -v 'grep'| wc -l) -eq 0 ] &&
    [ $(/sbin/ifconfig ${netwan}| grep 'inet '| grep -v ' 169'| wc -l) -eq 0 ]
 then
   timeout 15 qmi-network ${dev_cdc_wdm} stop
-  timeout 15 qmi-network ${dev_cdc_wdm} stop
-  timeout 15 qmi-network ${dev_cdc_wdm} start
+
+  qmicli -p -d ${dev_cdc_wdm} \
+    --device-open-net='net-raw-ip|net-no-qos-header' \
+    --wds-start-network="apn='send.ee',username='37259667179',ip-type=4" \
+    --client-no-release-cid
+
   timeout 20 /sbin/udhcpc -i ${netwan}
   exit 0
+else
+  echo "pass 2"
 fi
 
 if [ $(ps -efww| grep $(basename $0)| grep -v ${$}| grep -v 'grep'| wc -l) -eq 0 ] &&
    [ "$(qmi-network ${dev_cdc_wdm} status|grep Status|awk '{print $2}')" = "disconnected" ]
 then
   timeout 15 qmi-network ${dev_cdc_wdm} stop
-  timeout 15 qmi-network ${dev_cdc_wdm} stop
-  timeout 15 qmi-network ${dev_cdc_wdm} start
+
+  qmicli -p -d ${dev_cdc_wdm} \
+    --device-open-net='net-raw-ip|net-no-qos-header' \
+    --wds-start-network="apn='send.ee',username='37259667179',ip-type=4" \
+    --client-no-release-cid
+
   timeout 20 /sbin/udhcpc -i ${netwan}
   exit 0
+else
+  echo "pass 3"
 fi
 
 if [ $(ps -efww| grep $(basename $0)| grep -v ${$}| grep -v 'grep'| wc -l) -eq 0 ]
@@ -95,4 +113,6 @@ then
   else
     ps -efww| grep udhcpc| grep ${netwan}| grep -v 'grep'| awk '{print $2}'| xargs -l kill -9
   fi
+else
+  echo "pass 4"
 fi
