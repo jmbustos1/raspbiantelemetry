@@ -33,7 +33,7 @@ cat ${WORKING_DIR}/crontab.root| crontab -
 # CAN
 sed -i '/###############CAN ENABLED#############/,/############CAN ENABLED END############/d' /boot/config.txt
 cat ${WORKING_DIR}/boot/config.txt >> /boot/config.txt
-cp ${WORKING_DIR}/can0 /etc/network/interfaces.d/can0
+cp ${WORKING_DIR}/etc/network/interfaces.d/can0 /etc/network/interfaces.d/can0
 mkdir -p ${WORKING_DIR}/No_Enviados
 mkdir -p ${WORKING_DIR}/Enviados
 
