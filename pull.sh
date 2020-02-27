@@ -4,16 +4,6 @@ WORKING_DIR="$(dirname $(readlink -f ${0}))"
 ACTIVATE_PATH="$(dirname ${WORKING_DIR})/env3/bin/activate"
 
 cd ${WORKING_DIR}
-source ${ACTIVATE_PATH}
-
-if [ ! -f ${WORKING_DIR}/reboot02.log ]
-then
-  touch ${WORKING_DIR}/reboot02.log
-  echo "reboteado" > ${WORKING_DIR}/reboot02.log
-  rm ${WORKING_DIR}/reboot01.log
-  rm -rf ${WORKING_DIR}/No_Enviados/*
-  sudo reboot
-fi
 
 git remote update
 if [ $(git status -uno| grep 'origin/master'| grep -v 'up to date'| wc -l) -ge 1 ]
@@ -26,17 +16,21 @@ then
   then
     echo "appy changes..."
 
-    pip3 install -r requirements.txt
+    # python requirements
+    ${WORKING_DIR}/run.sh pip3 install -r ${WORKING_DIR}/requirements.txt
 
-    ./copyConf.sh etc usr
+    # copy files
+    ${WORKING_DIR}/copyConf.sh etc usr
 
-    # CAN
+    # copy CAN config
     sed -i '/###############CAN ENABLED#############/,/############CAN ENABLED END############/d' /boot/config.txt
     cat ${WORKING_DIR}/boot/config.txt >> /boot/config.txt
 
+    # crontabs
     cat ${WORKING_DIR}/crontab.user| crontab -
     cat ${WORKING_DIR}/crontab.root| sudo su -c "crontab -"
 
+    # restart services
     sudo service networking restart
     sudo service gpsd restart
     sudo service supervisor restart
