@@ -1,6 +1,5 @@
 aenum==2.2.3
 AWSIoTPythonSDK==1.4.7
 gps3==0.33.3
-numpy==1.17.4
 python-can==3.3.2
 wrapt==1.11.2

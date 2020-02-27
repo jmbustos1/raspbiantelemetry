@@ -4,7 +4,6 @@ from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 import AWSIoTPythonSDK
 import AWSparams
 import time
-import numpy as np
 import json
 import os
 import shutil
@@ -81,8 +80,6 @@ while True:
     all_files = sorted(filter(os.path.isfile, os.listdir('.')), key=os.path.getmtime)
     if len(all_files)>0:
         print(all_files)
-        ran = np.random.randint(10)
-        ran2 = np.random.randint(100)
 
         f=open(path + str(all_files[0]) ,'r')
 
