@@ -2,6 +2,12 @@
 
 WORKING_DIR="$(dirname $(readlink -f ${0}))"
 
+./copyConf.sh etc usr
+
+# CAN
+sed -i '/###############CAN ENABLED#############/,/############CAN ENABLED END############/d' /boot/config.txt
+cat ${WORKING_DIR}/boot/config.txt >> /boot/config.txt
+
 # GPIO
 echo "14" >  /sys/class/gpio/export
 echo "out" > /sys/class/gpio/gpio14/direction
@@ -25,19 +31,12 @@ qmicli -p -d ${devwwan0} --wds-set-default-profile-num="3gpp,1"
 qmicli -p -d ${devwwan0} --wds-delete-profile="3gpp2,1"
 qmicli -p -d ${devwwan0} --wds-set-autoconnect-settings=disabled
 
-cp ${WORKING_DIR}/etc/qmi-network.conf /etc/qmi-network.conf
-cp ${WORKING_DIR}/etc/wpa_supplicant/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
-cp ${WORKING_DIR}/usr/bin/check7600 /usr/bin/check7600
 cat ${WORKING_DIR}/crontab.root| crontab -
 
-# CAN
-sed -i '/###############CAN ENABLED#############/,/############CAN ENABLED END############/d' /boot/config.txt
-cat ${WORKING_DIR}/boot/config.txt >> /boot/config.txt
-cp ${WORKING_DIR}/etc/network/interfaces.d/can0 /etc/network/interfaces.d/can0
 mkdir -p ${WORKING_DIR}/No_Enviados
 mkdir -p ${WORKING_DIR}/Enviados
 
-cp ${WORKING_DIR}/etc/default/gpsd /etc/default/gpsd
+# GPS
 service gpsd restart
 
 # python
