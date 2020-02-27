@@ -7,7 +7,7 @@ then
   echo "wifi..."
   if [ $(ps -efww| grep udhcpc| grep wlan0| grep -v 'grep'| wc -l) -le 0 ]
   then
-    timeout 20 /sbin/udhcpc -i wlan0
+    timeout 20 /sbin/udhcpc -qfn -i wlan0
   else
     ps -efww| grep udhcpc| grep wlan0| grep -v 'grep'| awk '{print $2}'| xargs -l kill -9
   fi
@@ -34,19 +34,18 @@ netwan="$(echo ${raw_ip} | sed 's,.*net/,,g'| sed 's,/qmi.*$,,g')"
 if [ ! "$(cat ${raw_ip})" = "Y" ]
 then
   echo "raw_ip is not Y: ${netwan}"
+
   echo "AT+CRESET" > /dev/ttyUSB3 && timeout 60 cat /dev/ttyUSB3 > /dev/null 2>&1
   while [ $(/sbin/ifconfig -a| grep ${netwan}| wc -l) -le 0 ]
   do
     echo "waiting for ${netwan} ..."
     sleep 1
   done
-
   while [ $(find /sys -name 'raw_ip' 2> /dev/null| wc -l) -le 0 ]
   do
     echo "waiting for raw_ip ..."
     sleep 1
   done
-
   raw_ip="$(find /sys -name raw_ip 2> /dev/null| tail -n 1)"
   netwan="$(echo ${raw_ip} | sed 's,.*net/,,g'| sed 's,/qmi.*$,,g')"
 
@@ -62,57 +61,83 @@ then
 
   timeout 15 qmi-network ${dev_cdc_wdm} stop
 
-  qmicli -p -d ${dev_cdc_wdm} \
-    --device-open-net='net-raw-ip|net-no-qos-header' \
-    --wds-start-network="apn='send.ee',username='37259667179',ip-type=4" \
-    --client-no-release-cid
+  start_log="CallFailed"
+  while [ $(echo ${start_log}|grep "CallFailed"| wc -l) -gt 0 ]
+  do
+    start_log=$(qmicli -p -d ${dev_cdc_wdm} \
+      --device-open-net='net-raw-ip|net-no-qos-header' \
+      --wds-start-network="apn='send.ee',username='37259667179',ip-type=4" \
+      --client-no-release-cid 2>&1)
+    echo "${start_log}"
+    echo "waiting for CallReady ..."
+    sleep 1
+  done
 
-  timeout 20 /sbin/udhcpc -i ${netwan}
+  timeout 20 /sbin/udhcpc -qfn -i ${netwan}
   exit 0
 else
-  echo "pass 1"
+  echo "pass 1 (raw_ip is Y)"
 fi
 
-if [ $(ps -efww| grep $(basename $0)| grep -v ${$}| grep -v 'grep'| wc -l) -eq 0 ] &&
+if [ $(ps -efww| grep $(basename $0)| grep -v ${$}| grep -v 'grep'| grep -v 'sudo'| grep -v '/bin/sh -c'| wc -l) -eq 0 ] &&
    [ $(/sbin/ifconfig ${netwan}| grep 'inet '| grep -v ' 169'| wc -l) -eq 0 ]
 then
   timeout 15 qmi-network ${dev_cdc_wdm} stop
 
-  qmicli -p -d ${dev_cdc_wdm} \
-    --device-open-net='net-raw-ip|net-no-qos-header' \
-    --wds-start-network="apn='send.ee',username='37259667179',ip-type=4" \
-    --client-no-release-cid
+  start_log="CallFailed"
+  while [ $(echo ${start_log}|grep "CallFailed"| wc -l) -gt 0 ]
+  do
+    start_log=$(qmicli -p -d ${dev_cdc_wdm} \
+      --device-open-net='net-raw-ip|net-no-qos-header' \
+      --wds-start-network="apn='send.ee',username='37259667179',ip-type=4" \
+      --client-no-release-cid 2>&1)
+    echo "${start_log}"
+    echo "waiting for CallReady ..."
+    sleep 1
+  done
 
-  timeout 20 /sbin/udhcpc -i ${netwan}
+  timeout 20 /sbin/udhcpc -qfn -i ${netwan}
   exit 0
 else
-  echo "pass 2"
+  echo "pass 2 (${netwan} with ip)"
 fi
 
-if [ $(ps -efww| grep $(basename $0)| grep -v ${$}| grep -v 'grep'| wc -l) -eq 0 ] &&
+if [ $(ps -efww| grep $(basename $0)| grep -v ${$}| grep -v 'grep'| grep -v 'sudo'| grep -v '/bin/sh -c'| wc -l) -eq 0 ] &&
    [ "$(qmi-network ${dev_cdc_wdm} status|grep Status|awk '{print $2}')" = "disconnected" ]
 then
   timeout 15 qmi-network ${dev_cdc_wdm} stop
 
-  qmicli -p -d ${dev_cdc_wdm} \
-    --device-open-net='net-raw-ip|net-no-qos-header' \
-    --wds-start-network="apn='send.ee',username='37259667179',ip-type=4" \
-    --client-no-release-cid
+  start_log="CallFailed"
+  while [ $(echo ${start_log}|grep "CallFailed"| wc -l) -gt 0 ]
+  do
+    start_log=$(qmicli -p -d ${dev_cdc_wdm} \
+      --device-open-net='net-raw-ip|net-no-qos-header' \
+      --wds-start-network="apn='send.ee',username='37259667179',ip-type=4" \
+      --client-no-release-cid 2>&1)
+    echo "${start_log}"
+    echo "waiting for CallReady ..."
+    sleep 1
+  done
 
-  timeout 20 /sbin/udhcpc -i ${netwan}
+  timeout 20 /sbin/udhcpc -qfn -i ${netwan}
   exit 0
 else
-  echo "pass 3"
+  echo "pass 3 (qmi-network status: connected)"
 fi
 
-if [ $(ps -efww| grep $(basename $0)| grep -v ${$}| grep -v 'grep'| wc -l) -eq 0 ]
+if [ $(ps -efww| grep $(basename $0)| grep -v ${$}| grep -v 'grep'| grep -v 'sudo'| grep -v '/bin/sh -c'| wc -l) -eq 0 ]
 then
   if [ $(ps -efww| grep udhcpc| grep ${netwan}| grep -v 'grep'| wc -l) -eq 0 ]
   then
-    timeout 20 /sbin/udhcpc -i ${netwan}
+    timeout 20 /sbin/udhcpc -qfn -i ${netwan}
   else
     ps -efww| grep udhcpc| grep ${netwan}| grep -v 'grep'| awk '{print $2}'| xargs -l kill -9
+    echo "killall udhcpc with ${netwan}"
   fi
+  exit 0
 else
+  echo "$(ps -efww| grep $(basename $0)| grep -v ${$}| grep -v 'grep'| grep -v 'sudo'| grep -v '/bin/sh -c')"
+  echo "ps -efww| grep $(basename $0)| grep -v ${$}| grep -v 'grep'| grep -v 'sudo'| grep -v '/bin/sh -c'"
+  echo "$(ps -efww| grep $(basename $0)| grep -v 'grep'| grep -v 'sudo'| grep -v '/bin/sh -c')"
   echo "pass 4"
 fi
