@@ -25,21 +25,20 @@ then
      [ $(cat pull.log|grep "Name or service not known"|wc -l) -ne 1 ]
   then
     echo "appy changes..."
-    cat ${WORKING_DIR}/crontab.user| crontab -
-
-    sudo cp ${WORKING_DIR}/etc/qmi-network.conf /etc/qmi-network.conf
-    sudo cp ${WORKING_DIR}/usr/bin/check7600 /usr/bin/check7600
-    sudo cat ${WORKING_DIR}/crontab.root| sudo su -c "crontab -"
-
-    sudo cp ${WORKING_DIR}/etc/network/interfaces.d/can0 /etc/network/interfaces.d/can0
-    sudo service networking restart
-
-    sudo cp ${WORKING_DIR}/etc/default/gpsd /etc/default/gpsd
-    sudo service gpsd restart
 
     pip3 install -r requirements.txt
-    sudo cp cancollecter.conf /etc/supervisor/conf.d/cancollecter.conf
-    sudo cp push2aws.conf /etc/supervisor/conf.d/push2aws.conf
+
+    ./copyConf.sh etc usr
+
+    # CAN
+    sed -i '/###############CAN ENABLED#############/,/############CAN ENABLED END############/d' /boot/config.txt
+    cat ${WORKING_DIR}/boot/config.txt >> /boot/config.txt
+
+    cat ${WORKING_DIR}/crontab.user| crontab -
+    cat ${WORKING_DIR}/crontab.root| sudo su -c "crontab -"
+
+    sudo service networking restart
+    sudo service gpsd restart
     sudo service supervisor restart
   fi
 fi
