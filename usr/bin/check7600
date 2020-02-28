@@ -35,7 +35,12 @@ if [ ! "$(cat ${raw_ip})" = "Y" ]
 then
   echo "raw_ip is not Y: ${netwan}"
 
-  echo "AT+CRESET" > /dev/ttyUSB3 && timeout 60 cat /dev/ttyUSB3 > /dev/null 2>&1
+  /sbin/ifconfig ${netwan} down
+  echo "ifconfig down"
+
+  echo "AT+CRESET" > /dev/ttyUSB3
+  sleep 60
+  echo "AT+CRESET sended!"
   while [ $(/sbin/ifconfig -a| grep ${netwan}| wc -l) -le 0 ]
   do
     echo "waiting for ${netwan} ..."
@@ -103,7 +108,7 @@ else
 fi
 
 if [ $(ps -efww| grep $(basename $0)| grep -v ${$}| grep -v 'grep'| grep -v 'sudo'| grep -v '/bin/sh -c'| wc -l) -eq 0 ] &&
-   [ "$(qmi-network ${dev_cdc_wdm} status|grep Status|awk '{print $2}')" = "disconnected" ]
+   [ ! "$(qmicli -d ${dev_cdc_wdm} --wds-get-packet-service-status| awk '{print $4}')" = "'connected'" ]
 then
   timeout 15 qmi-network ${dev_cdc_wdm} stop
 
