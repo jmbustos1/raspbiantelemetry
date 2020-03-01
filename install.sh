@@ -11,7 +11,7 @@ aptitude install virtualenv supervisor
 aptitude install libqmi-utils udhcpc gpsd
 
 # copy files
-./copyConf.sh etc usr
+${WORKING_DIR}/copyConf.sh etc usr
 
 # copy CAN config
 sed -i '/###############CAN ENABLED#############/,/############CAN ENABLED END############/d' /boot/config.txt

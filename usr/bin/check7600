@@ -29,7 +29,7 @@ do
 done
 
 raw_ip="$(find /sys -name raw_ip 2> /dev/null| tail -n 1)"
-netwan="$(echo ${raw_ip} | sed 's,.*net/,,g'| sed 's,/qmi.*$,,g')"
+netwan="$(echo ${raw_ip}| sed 's,.*net/,,g'| sed 's,/qmi.*$,,g')"
 
 if [ ! "$(cat ${raw_ip})" = "Y" ]
 then
@@ -52,7 +52,7 @@ then
     sleep 1
   done
   raw_ip="$(find /sys -name raw_ip 2> /dev/null| tail -n 1)"
-  netwan="$(echo ${raw_ip} | sed 's,.*net/,,g'| sed 's,/qmi.*$,,g')"
+  netwan="$(echo ${raw_ip}| sed 's,.*net/,,g'| sed 's,/qmi.*$,,g')"
 
   /sbin/ifconfig ${netwan} down
   echo "Y" > ${raw_ip}
@@ -71,7 +71,7 @@ then
   do
     start_log=$(qmicli -p -d ${dev_cdc_wdm} \
       --device-open-net='net-raw-ip|net-no-qos-header' \
-      --wds-start-network="apn='send.ee',username='37259667179',ip-type=4" \
+      --wds-start-network="apn='${APN}',username='${APN_USER}',password='${APN_PASS}',ip-type=4" \
       --client-no-release-cid 2>&1)
     echo "${start_log}"
     echo "waiting for CallReady ..."
@@ -94,7 +94,7 @@ then
   do
     start_log=$(qmicli -p -d ${dev_cdc_wdm} \
       --device-open-net='net-raw-ip|net-no-qos-header' \
-      --wds-start-network="apn='send.ee',username='37259667179',ip-type=4" \
+      --wds-start-network="apn='${APN}',username='${APN_USER}',password='${APN_PASS}',ip-type=4" \
       --client-no-release-cid 2>&1)
     echo "${start_log}"
     echo "waiting for CallReady ..."
@@ -117,7 +117,7 @@ then
   do
     start_log=$(qmicli -p -d ${dev_cdc_wdm} \
       --device-open-net='net-raw-ip|net-no-qos-header' \
-      --wds-start-network="apn='send.ee',username='37259667179',ip-type=4" \
+      --wds-start-network="apn='${APN}',username='${APN_USER}',password='${APN_PASS}',ip-type=4" \
       --client-no-release-cid 2>&1)
     echo "${start_log}"
     echo "waiting for CallReady ..."
