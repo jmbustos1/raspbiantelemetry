@@ -69,9 +69,23 @@ then
   start_log="CallFailed"
   while [ $(echo ${start_log}|grep "CallFailed"| wc -l) -gt 0 ]
   do
+    NETWORK_CONF="ip-type=4"
+    if [ ! "${APN}" == "" ]
+    then
+      NETWORK_CONF="${NETWORK_CONF},apn='${APN}'"
+    fi
+    if [ ! "${APN_USER}" == "" ]
+    then
+      NETWORK_CONF="${NETWORK_CONF},username='${APN_USER}'"
+    fi
+    if [ ! "${APN_PASS}" == "" ]
+    then
+      NETWORK_CONF="${NETWORK_CONF},password='${APN_PASS}'"
+    fi
+
     start_log=$(qmicli -p -d ${dev_cdc_wdm} \
       --device-open-net='net-raw-ip|net-no-qos-header' \
-      --wds-start-network="apn='${APN}',username='${APN_USER}',password='${APN_PASS}',ip-type=4" \
+      --wds-start-network="${NETWORK_CONF}" \
       --client-no-release-cid 2>&1)
     echo "${start_log}"
     echo "waiting for CallReady ..."
@@ -92,9 +106,23 @@ then
   start_log="CallFailed"
   while [ $(echo ${start_log}|grep "CallFailed"| wc -l) -gt 0 ]
   do
+    NETWORK_CONF="ip-type=4"
+    if [ ! "${APN}" == "" ]
+    then
+      NETWORK_CONF="${NETWORK_CONF},apn='${APN}'"
+    fi
+    if [ ! "${APN_USER}" == "" ]
+    then
+      NETWORK_CONF="${NETWORK_CONF},username='${APN_USER}'"
+    fi
+    if [ ! "${APN_PASS}" == "" ]
+    then
+      NETWORK_CONF="${NETWORK_CONF},password='${APN_PASS}'"
+    fi
+
     start_log=$(qmicli -p -d ${dev_cdc_wdm} \
       --device-open-net='net-raw-ip|net-no-qos-header' \
-      --wds-start-network="apn='${APN}',username='${APN_USER}',password='${APN_PASS}',ip-type=4" \
+      --wds-start-network="${NETWORK_CONF}" \
       --client-no-release-cid 2>&1)
     echo "${start_log}"
     echo "waiting for CallReady ..."
@@ -115,9 +143,23 @@ then
   start_log="CallFailed"
   while [ $(echo ${start_log}|grep "CallFailed"| wc -l) -gt 0 ]
   do
+    NETWORK_CONF="ip-type=4"
+    if [ ! "${APN}" == "" ]
+    then
+      NETWORK_CONF="${NETWORK_CONF},apn='${APN}'"
+    fi
+    if [ ! "${APN_USER}" == "" ]
+    then
+      NETWORK_CONF="${NETWORK_CONF},username='${APN_USER}'"
+    fi
+    if [ ! "${APN_PASS}" == "" ]
+    then
+      NETWORK_CONF="${NETWORK_CONF},password='${APN_PASS}'"
+    fi
+
     start_log=$(qmicli -p -d ${dev_cdc_wdm} \
       --device-open-net='net-raw-ip|net-no-qos-header' \
-      --wds-start-network="apn='${APN}',username='${APN_USER}',password='${APN_PASS}',ip-type=4" \
+      --wds-start-network="${NETWORK_CONF}" \
       --client-no-release-cid 2>&1)
     echo "${start_log}"
     echo "waiting for CallReady ..."
