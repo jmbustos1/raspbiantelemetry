@@ -6,10 +6,10 @@ Created on Tue Feb  4 15:58:39 2020
 """
 Credentials = {
 	"SHADOW_CLIENT" : "myShadowClient",
-	"HOST_NAME" : "a3j11b88qfh3w4-ats.iot.us-east-1.amazonaws.com",
+	"HOST_NAME" : "a3cb4a75grpwn3-ats.iot.us-east-1.amazonaws.com",
 	"ROOT_CA" : "/home/pi/raspbiantelemetry/AmazonRootCA1.pem.txt",
-	"PRIVATE_KEY" : "/home/pi/raspbiantelemetry/56f4000c82-private.pem.key",
-	"CERT_FILE" : "/home/pi/raspbiantelemetry/56f4000c82-certificate.pem.crt",
+	"PRIVATE_KEY" : "/home/pi/raspbiantelemetry/6c39e9b606-private.pem.key",
+	"CERT_FILE" : "/home/pi/raspbiantelemetry/6c39e9b606-certificate.pem.crt",
 	"SHADOW_HANDLER" : "rpi1"
 }
 
