@@ -20,11 +20,11 @@ then
     ${WORKING_DIR}/run.sh pip3 install -r ${WORKING_DIR}/requirements.txt
 
     # copy files
-    ${WORKING_DIR}/copyConf.sh etc usr
+    sudo ${WORKING_DIR}/copyConf.sh etc usr
 
     # copy CAN config
-    sed -i '/###############CAN ENABLED#############/,/############CAN ENABLED END############/d' /boot/config.txt
-    cat ${WORKING_DIR}/boot/config.txt >> /boot/config.txt
+    sudo sed -i '/###############CAN ENABLED#############/,/############CAN ENABLED END############/d' /boot/config.txt
+    cat ${WORKING_DIR}/boot/config.txt| sudo tee -a /boot/config.txt"
 
     # crontabs
     cat ${WORKING_DIR}/crontab.user| crontab -
