@@ -38,6 +38,9 @@ then
   /sbin/ifconfig ${netwan} down
   echo "ifconfig down"
 
+  /usr/sbin/service gpsd stop
+  echo "gpsd down"
+
   echo "AT+CRESET" > /dev/ttyUSB3
   sleep 60
   echo "AT+CRESET sended!"
@@ -63,6 +66,12 @@ then
   echo "AT+CGPSHOR=100" > /dev/ttyUSB3
   echo "AT+CGPSAUTO=1" > /dev/ttyUSB3
   /sbin/ifconfig ${netwan} up
+
+  /usr/sbin/service gpsd start
+  echo "gpsd up"
+
+  /usr/sbin/service supervisor restart
+  echo "supervisor restart"
 
   timeout 15 qmi-network ${dev_cdc_wdm} stop
 
