@@ -6,9 +6,9 @@ WORKING_DIR="$(dirname $(readlink -f ${0}))"
 apt install -y aptitude
 
 # packages python
-aptitude install virtualenv supervisor
+aptitude install -y virtualenv supervisor
 # packages sim (GSM and GPS)
-aptitude install libqmi-utils udhcpc gpsd
+aptitude install -y libqmi-utils udhcpc gpsd
 systemctl stop gpsd
 systemctl disable gpsd
 
