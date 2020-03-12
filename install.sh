@@ -48,7 +48,7 @@ pip3 install --upgrade pip
 pip3 install -r ${WORKING_DIR}/requirements.txt
 "
 
-mkdir -p ${WORKING_DIR}/No_Enviados
-mkdir -p ${WORKING_DIR}/Enviados
+su - pi -c "mkdir -p ${WORKING_DIR}/No_Enviados"
+su - pi -c "mkdir -p ${WORKING_DIR}/Enviados"
 
 service supervisor restart
