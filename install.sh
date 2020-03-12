@@ -9,6 +9,8 @@ apt install -y aptitude
 aptitude install virtualenv supervisor
 # packages sim (GSM and GPS)
 aptitude install libqmi-utils udhcpc gpsd
+systemctl stop gpsd
+systemctl disable gpsd
 
 # copy files
 ${WORKING_DIR}/copyConf.sh etc usr
