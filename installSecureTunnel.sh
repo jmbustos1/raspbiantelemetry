@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # check copy files
-if [ test -f "/etc/default/secure-tunnel.conf" ] &&
-   [ test -f "/etc/systemd/system/secure-tunnel@.service" ]
+if [ -f "/etc/default/secure-tunnel.conf" ] &&
+   [ -f "/etc/systemd/system/secure-tunnel@.service" ]
 then
   # add ocpp.voltiosc.cl to list of known hosts
   su -c "mkdir -p ~/.ssh"
